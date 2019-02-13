@@ -5,8 +5,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import AddStudent from './add_student';
 import Table from './table';
-import studentData from "../data/get_all_students";
-import { randomString } from '../helpers';
+import { formatPostData } from '../helpers';
 
 class App extends Component {
     state = {
@@ -33,11 +32,13 @@ class App extends Component {
         }
     }
     
-    addStudent = (student) => {
-        student.id = randomString();
-        this.setState({
-           students: [...this.state.students, student] 
-        });
+    addStudent = async (student) => {
+        const formattedStudent = formatPostData(student);
+        console.log(formattedStudent);
+
+        const resp = await axios.post('http://localhost/server/createstudent.php', formattedStudent);
+
+        console.log(resp);
     }
 
     async getStudentData() {
@@ -45,10 +46,14 @@ class App extends Component {
 
         const resp = await axios.get('http://localhost/server/getstudentlist.php');
 
-        this.setState({
-            students: resp.data.data
-        });
-        
+        console.log(resp);
+
+        if (resp.data.success) {
+            this.setState({
+                students: resp.data.data
+            });
+        } 
+
         // OLD METHOD
         // axios.get('http://localhost/server/getstudentlist.php').then( (response)=> {
         //     console.log('Server Response: ', response);
