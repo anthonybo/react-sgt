@@ -40,19 +40,22 @@ class App extends Component {
         });
     }
 
-    getStudentData() {
+    async getStudentData() {
         // Call Server to get student data
 
-        axios.get('http://localhost/server/getstudentlist.php').then( (response)=> {
-            console.log('Server Response: ', response);
+        const resp = await axios.get('http://localhost/server/getstudentlist.php');
 
-            this.setState({
-                students: response.data.data
-            });
+        this.setState({
+            students: resp.data.data
         });
-
-        // this.setState({
-        //     students: studentData
+        
+        // OLD METHOD
+        // axios.get('http://localhost/server/getstudentlist.php').then( (response)=> {
+        //     console.log('Server Response: ', response);
+        //
+        //     this.setState({
+        //         students: response.data.data
+        //     });
         // });
     }
     
