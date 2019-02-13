@@ -16,43 +16,41 @@ class App extends Component {
         this.getStudentData();
     }
 
-    deleteStudent = (id) => {
-        const indexToDelete = this.state.students.findIndex( (student)=>{
-            return student.id === id;
-        });
-        
-        if (indexToDelete >= 0) {
-            const tempStudents = this.state.students.slice();
-            
-            tempStudents.splice(indexToDelete, 1);
-            
-            this.setState({
-                students: tempStudents
-            });
-        }
+    deleteStudent = async (id) => {
+        const formattedId = formatPostData({id: id});
+
+        await axios.post('/server/deletestudent.php', formattedId);
+
+        this.getStudentData();
     }
     
     addStudent = async (student) => {
         const formattedStudent = formatPostData(student);
-        console.log(formattedStudent);
 
-        const resp = await axios.post('http://localhost/server/createstudent.php', formattedStudent);
+        await axios.post('/server/createstudent.php', formattedStudent);
 
-        console.log(resp);
+        this.getStudentData();
+
     }
 
     async getStudentData() {
         // Call Server to get student data
 
-        const resp = await axios.get('http://localhost/server/getstudentlist.php');
+        const resp = await axios.get('/server/getstudentlist.php');
 
-        console.log(resp);
+        this.setState({
+            students: resp.data.data || []
+        })
 
-        if (resp.data.success) {
-            this.setState({
-                students: resp.data.data
-            });
-        } 
+        // if (resp.data.success) {
+        //     this.setState({
+        //         students: resp.data.data
+        //     });
+        // } else {
+        //     this.setState({
+        //         students: []
+        //     })
+        // }
 
         // OLD METHOD
         // axios.get('http://localhost/server/getstudentlist.php').then( (response)=> {

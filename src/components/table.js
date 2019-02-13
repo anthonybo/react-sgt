@@ -18,7 +18,7 @@ const Table = props => {
             </tr>
         )
     }
-    
+
     return (
         <table>
             <thead>
