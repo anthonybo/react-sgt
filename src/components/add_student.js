@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {formatPostData} from "../helpers";
+import axios from "axios";
+import {Link} from 'react-router-dom';
 
 class AddStudent extends Component {
     state = {
@@ -9,11 +12,14 @@ class AddStudent extends Component {
         notes: ''
     }
 
-    handleSubmit = (event) => {
+    handleSubmit = async (event) => {
         event.preventDefault();
+
+        const formattedStudent = formatPostData(this.state);
+
+        await axios.post('/server/createstudent.php', formattedStudent);
         
-        this.props.add(this.state);
-        this.resetForm();
+        this.props.history.push('/');
     }
 
     resetForm = () => {
@@ -52,49 +58,62 @@ class AddStudent extends Component {
 
     render() {
         const {name, course, grade, instructor, notes} = this.state;
-
+        
         return (
-            <form onSubmit={this.handleSubmit}>
+            <div>
+                <h1 className='green pulse center'>Add Student</h1>
+
                 <div className="row">
-                    <div className="col input-field s10 offset-s1">
-                        <input onChange={this.handleKeyPress} name ='name' type="text" id='name' value={name} autoComplete='off'/>
-                        <label htmlFor="name">Name</label>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col input-field s10 offset-s1">
-                        <input onChange={this.handleKeyPress} name='course' type="text" id='course' value={course} autoComplete='off'/>
-                        <label htmlFor="course">Course</label>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col input-field s10 offset-s1">
-                        <input onChange={this.handleKeyPress} name='grade' type="text" id='grade' value={grade} autoComplete='off'/>
-                        <label htmlFor="grade">Grade</label>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col input-field s10 offset-s1">
-                        <input onChange={this.handleKeyPress} name='instructor' type="text" id='instructor' value={instructor} autoComplete='off'/>
-                        <label htmlFor="instructor">Instructor</label>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col input-field s10 offset-s1">
-                        <input onChange={this.handleKeyPress} name='notes' type="text" id='notes' value={notes} autoComplete='off'/>
-                        <label htmlFor="notes">Notes</label>
+                    <div className="col s12 right-align">
+                        <Link className='btn blue' to='/'>Home</Link>
                     </div>
                 </div>
 
-                <div className="row">
-                    <div className="col s6 center">
-                        <button onClick={this.resetForm} type='button' className='btn red waves-effect waves-light'>Clear</button>
+
+                <form onSubmit={this.handleSubmit}>
+                    <div className="row">
+                        <div className="col input-field s10 offset-s1">
+                            <input onChange={this.handleKeyPress} name ='name' type="text" id='name' value={name} autoComplete='off'/>
+                            <label htmlFor="name">Name</label>
+                        </div>
                     </div>
-                    <div className="col s6 center">
-                        <button className='btn green darken-2 waves-effect waves-light'>Add</button>
+                    <div className="row">
+                        <div className="col input-field s10 offset-s1">
+                            <input onChange={this.handleKeyPress} name='course' type="text" id='course' value={course} autoComplete='off'/>
+                            <label htmlFor="course">Course</label>
+                        </div>
                     </div>
-                </div>
-            </form>
+                    <div className="row">
+                        <div className="col input-field s10 offset-s1">
+                            <input onChange={this.handleKeyPress} name='grade' type="text" id='grade' value={grade} autoComplete='off'/>
+                            <label htmlFor="grade">Grade</label>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col input-field s10 offset-s1">
+                            <input onChange={this.handleKeyPress} name='instructor' type="text" id='instructor' value={instructor} autoComplete='off'/>
+                            <label htmlFor="instructor">Instructor</label>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col input-field s10 offset-s1">
+                            <input onChange={this.handleKeyPress} name='notes' type="text" id='notes' value={notes} autoComplete='off'/>
+                            <label htmlFor="notes">Notes</label>
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col s6 center">
+                            <button onClick={this.resetForm} type='button' className='btn red waves-effect waves-light'>Clear</button>
+                        </div>
+                        <div className="col s6 center">
+                            <button className='btn green darken-2 waves-effect waves-light'>Add</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
         )
     }
 }
